@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Loyer au m² - Service Express</title></head>
+<body style="background:#020617; color:#fff; font-family:sans-serif; text-align:center; padding:50px;">
+  <a href="https://service-express.org" style="color:#94a3b8; text-decoration:none;">← Retour au portail</a>
+  <h1>🏢 Loyer au <span>m²</span></h1>
+  <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:20px; max-width:400px; margin:20px auto;">
+    <label>Loyer HC (€)</label><br><input type="number" id="l" oninput="c()" style="padding:10px; width:100%; border-radius:10px;"><br><br>
+    <label>Surface (m²)</label><br><input type="number" id="s" oninput="c()" style="padding:10px; width:100%; border-radius:10px;"><br><br>
+    <div id="r" style="font-size:24px; color:#a78bfa;">0 € / m²</div>
+  </div>
+  <script>function c(){ let l=document.getElementById('l').value, s=document.getElementById('s').value; if(l&&s)document.getElementById('r').textContent=(l/s).toFixed(2)+' € / m²';}</script>
+</body></html>
