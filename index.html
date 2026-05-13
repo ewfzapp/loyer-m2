@@ -1,13 +1,163 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="UTF-8"><title>Loyer au m² - Service Express</title></head>
-<body style="background:#020617; color:#fff; font-family:sans-serif; text-align:center; padding:50px;">
-  <a href="https://service-express.org" style="color:#94a3b8; text-decoration:none;">← Retour au portail</a>
-  <h1>🏢 Loyer au <span>m²</span></h1>
-  <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:20px; max-width:400px; margin:20px auto;">
-    <label>Loyer HC (€)</label><br><input type="number" id="l" oninput="c()" style="padding:10px; width:100%; border-radius:10px;"><br><br>
-    <label>Surface (m²)</label><br><input type="number" id="s" oninput="c()" style="padding:10px; width:100%; border-radius:10px;"><br><br>
-    <div id="r" style="font-size:24px; color:#a78bfa;">0 € / m²</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculateur Loyer au m² 2026 – Prix au Mètre Carré | Service Express</title>
+  <meta name="description" content="Calculez le loyer au m² de votre logement et comparez avec les prix du marché locatif 2026 selon votre ville. Gratuit et instantané.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://loyer-m2.service-express.org/">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1805732481707409" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#04050f;--surface:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.09);--purple:#a78bfa;--purple-dim:#818cf8;--accent:#7c3aed;--text:#e8eaf6;--muted:#7c85a8;--green:#34d399;--amber:#fbbf24;--red:#f87171;--blue:#60a5fa;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0 16px 60px;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 55% 45% at 20% 20%,rgba(99,60,180,.15) 0%,transparent 70%),radial-gradient(ellipse 45% 55% at 80% 80%,rgba(200,100,30,.08) 0%,transparent 70%);pointer-events:none;}
+    .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0 24px;border-bottom:1px solid var(--border);margin-bottom:36px;}
+    .nav-brand{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--purple);text-decoration:none;}
+    .nav-back{font-size:13px;color:var(--muted);text-decoration:none;}
+    .nav-back:hover{color:var(--purple);}
+    .hero{text-align:center;margin-bottom:32px;}
+    .hero h1{font-family:'Syne',sans-serif;font-size:clamp(26px,5vw,40px);font-weight:800;margin-bottom:8px;}
+    .hero h1 span{color:var(--purple);}
+    .hero p{font-size:15px;color:var(--muted);}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:20px;}
+    .card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--purple);margin-bottom:20px;}
+    .field{margin-bottom:20px;}
+    .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500;}
+    input[type=number],select{width:100%;padding:12px 16px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:15px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s;}
+    input[type=number]:focus,select:focus{border-color:var(--purple);}
+    select option{background:#1a1a2e;}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .result-box{background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(109,40,217,.15));border:1px solid rgba(167,139,250,.3);border-radius:20px;padding:32px;text-align:center;margin-bottom:20px;}
+    .result-label{font-size:13px;color:var(--muted);margin-bottom:8px;}
+    .result-val{font-family:'Syne',sans-serif;font-size:clamp(44px,10vw,64px);font-weight:800;color:var(--purple);line-height:1;}
+    .result-unit{font-size:18px;color:var(--purple-dim);}
+    .result-sub{font-size:13px;color:var(--muted);margin-top:8px;}
+    .details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;}
+    .detail-item{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+    .detail-item .d-label{font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+    .detail-item .d-value{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);}
+    .comparatif{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:20px;}
+    .comparatif .card-title{margin-bottom:16px;}
+    .ville-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
+    .ville-row:last-child{border-bottom:none;}
+    .ville-name{color:var(--muted);min-width:110px;}
+    .ville-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+    .ville-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .4s;}
+    .ville-price{font-family:'Syne',sans-serif;font-weight:700;color:var(--purple);min-width:65px;text-align:right;}
+    .badge{font-size:10px;background:rgba(167,139,250,.2);color:var(--purple);border-radius:4px;padding:1px 6px;margin-left:4px;}
+    .info-box{background:rgba(96,165,250,.08);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:1.7;}
+    .info-box strong{color:var(--text);}
+    .seo{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;margin-top:8px;}
+    .seo h2{font-family:'Syne',sans-serif;font-size:18px;color:var(--purple);margin-bottom:12px;}
+    details{border-bottom:1px solid var(--border);padding:12px 0;}
+    details:last-child{border-bottom:none;}
+    summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;}
+    summary::after{content:'▾';font-size:12px;color:var(--muted);}
+    details[open] summary::after{content:'▴';}
+    details p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px;}
+    .ad-placeholder{background:rgba(255,255,255,0.05);border:1px dashed rgba(255,255,255,0.1);border-radius:12px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:0.7rem;text-transform:uppercase;min-height:90px;}
+    footer{text-align:center;margin-top:48px;font-size:12px;color:var(--muted);}
+    footer a{color:var(--purple-dim);text-decoration:none;}
+    footer a:hover{text-decoration:underline;}
+    @media(max-width:480px){.row{grid-template-columns:1fr;}.details-grid{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="nav-brand" href="https://service-express.org">⚡ Service Express</a>
+    <a class="nav-back" href="https://service-express.org">← Retour au portail</a>
+  </nav>
+  <div class="hero">
+    <h1>🏢 Loyer au <span>m²</span></h1>
+    <p>Calculez et comparez le prix de votre loyer au mètre carré</p>
   </div>
-  <script>function c(){ let l=document.getElementById('l').value, s=document.getElementById('s').value; if(l&&s)document.getElementById('r').textContent=(l/s).toFixed(2)+' € / m²';}</script>
-</body></html>
+  <div class="ad-placeholder">Publicité AdSense</div>
+  <div class="card">
+    <div class="card-title">📋 Votre logement</div>
+    <div class="row">
+      <div class="field">
+        <label>Loyer mensuel HC (€)</label>
+        <input type="number" id="loyer" value="900" min="0" step="10" oninput="calculate()">
+      </div>
+      <div class="field">
+        <label>Surface habitable (m²)</label>
+        <input type="number" id="surface" value="45" min="1" step="1" oninput="calculate()">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Charges mensuelles (€)</label>
+        <input type="number" id="charges" value="80" min="0" step="10" oninput="calculate()">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Type de logement</label>
+        <select id="type-logement" onchange="calculate()">
+          <option value="appartement">Appartement</option>
+          <option value="maison">Maison</option>
+          <option value="studio">Studio</option>
+          <option value="chambre">Chambre</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="result-box">
+    <div class="result-label">Prix au mètre carré (HC)</div>
+    <div class="result-val"><span id="prix-m2">—</span> <span class="result-unit">€/m²</span></div>
+    <div class="result-sub" id="result-sub">—</div>
+    <div class="details-grid">
+      <div class="detail-item"><div class="d-label">Loyer CC</div><div class="d-value" id="loyer-cc">—</div></div>
+      <div class="detail-item"><div class="d-label">Prix/m² CC</div><div class="d-value" id="prix-m2-cc">—</div></div>
+      <div class="detail-item"><div class="d-label">Loyer annuel</div><div class="d-value" id="loyer-annuel">—</div></div>
+    </div>
+  </div>
+  <div class="comparatif">
+    <div class="card-title">📍 Comparatif grandes villes 2026</div>
+    <div id="comparatif-list"></div>
+  </div>
+  <div class="info-box">💡 Le loyer <strong>hors charges (HC)</strong> est la référence pour comparer les prix au m². Le loyer <strong>charges comprises (CC)</strong> représente votre dépense réelle mensuelle.</div>
+  <div class="seo">
+    <h2>FAQ — Loyer et marché locatif</h2>
+    <details><summary>Qu'est-ce que l'encadrement des loyers ?</summary><p>Dans certaines villes (Paris, Lille, Lyon, Bordeaux, Montpellier…), les loyers sont encadrés par décret. Le propriétaire ne peut pas dépasser un loyer de référence majoré fixé par arrêté préfectoral.</p></details>
+    <details><summary>Comment savoir si mon loyer est trop élevé ?</summary><p>Comparez votre loyer au m² avec les observatoires locaux (OLAP pour Paris, CLAMEUR en région). Si votre ville est soumise à l'encadrement, consultez le site officiel de votre préfecture.</p></details>
+    <details><summary>Loyer HC vs CC : quelle différence ?</summary><p>Le loyer hors charges (HC) est la base contractuelle. Les charges comprennent les provisions pour charges de copropriété, l'eau froide, parfois le chauffage collectif.</p></details>
+    <details><summary>Peut-on négocier son loyer ?</summary><p>Dans les zones non soumises à encadrement, tout est négociable à l'entrée. En cours de bail, le loyer ne peut être révisé qu'une fois par an selon l'Indice de Référence des Loyers (IRL).</p></details>
+  </div>
+  <footer>
+    <p>© 2026 Service Express &nbsp;·&nbsp; <a href="privacy.html">Confidentialité</a> &nbsp;·&nbsp; <a href="legal.html">Mentions Légales</a></p>
+    <p style="margin-top:6px">Prix indicatifs basés sur les observatoires locatifs 2026. Données à titre informatif.</p>
+  </footer>
+</div>
+<script>
+  const VILLES=[{nom:'Paris',prix:31.5},{nom:'Nice',prix:18.7},{nom:'Lyon',prix:16.2},{nom:'Bordeaux',prix:15.8},{nom:'Montpellier',prix:15.3},{nom:'Nantes',prix:14.9},{nom:'Toulouse',prix:14.1},{nom:'Strasbourg',prix:13.8},{nom:'Marseille',prix:13.4},{nom:'Grenoble',prix:13.2}];
+  const MAX=Math.max(...VILLES.map(v=>v.prix));
+  function fmt(n){return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);}
+  function renderComparatif(userPrix){
+    document.getElementById('comparatif-list').innerHTML=VILLES.map(v=>{
+      const w=(v.prix/MAX*100).toFixed(1);
+      const proche=userPrix&&Math.abs(userPrix-v.prix)<2;
+      return `<div class="ville-row"><span class="ville-name">${v.nom}${proche?'<span class="badge">~vous</span>':''}</span><div class="ville-bar-wrap"><div class="ville-bar" style="width:${w}%"></div></div><span class="ville-price">${v.prix.toFixed(1)} €/m²</span></div>`;
+    }).join('');
+  }
+  function calculate(){
+    const loyer=parseFloat(document.getElementById('loyer').value)||0;
+    const surface=parseFloat(document.getElementById('surface').value)||1;
+    const charges=parseFloat(document.getElementById('charges').value)||0;
+    const prixM2=loyer/surface;
+    const loyerCC=loyer+charges;
+    document.getElementById('prix-m2').textContent=prixM2.toFixed(2);
+    document.getElementById('result-sub').textContent=`Pour un logement de ${surface} m² à ${fmt(loyer)}/mois HC`;
+    document.getElementById('loyer-cc').textContent=fmt(loyerCC);
+    document.getElementById('prix-m2-cc').textContent=(loyerCC/surface).toFixed(2)+' €/m²';
+    document.getElementById('loyer-annuel').textContent=fmt(loyerCC*12);
+    renderComparatif(prixM2);
+  }
+  calculate();
+</script>
+</body>
+</html>
