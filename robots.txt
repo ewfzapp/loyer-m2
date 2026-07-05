@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://loyer-m2.service-express.org/sitemap.xml
